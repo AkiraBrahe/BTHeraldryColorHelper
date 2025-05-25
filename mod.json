@@ -1,0 +1,14 @@
+{
+  "Name": "BTHeraldryColorHelper",
+  "Enabled": true,
+  "Version": "1.0",
+  
+  "Description": "Display the ColorSwatch ID on the Heraldry screen.",
+  "Author": "Kierk",
+  
+  "DLL": "BTHeraldryColorHelper.dll",
+  "DLLEntryPoint": "BTHeraldryColorHelper.Main.Init",
+  "Settings": {
+    "ShowColorNameOnEachSwatch": true
+  }
+}
