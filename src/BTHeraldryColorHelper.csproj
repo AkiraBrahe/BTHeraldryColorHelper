@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>BTHeraldryColorHelper</Title>
+    <Title>Heraldry Color Helper</Title>
     <Authors>Kierk</Authors>
     <Copyright>Copyright © 2025</Copyright>
     <Version>1.0.1</Version>
@@ -15,12 +15,11 @@
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\..\..\..\..\Program Files %28x86%29\Steam\Steamapps\common\BattleTech\Mods\BTHeraldryColorHelper\</OutputPath>
+    <OutputPath>$(BattleTechGameDir)\Mods\$(AssemblyName)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <OutputPath>..\..\..\..\..\..\Program Files %28x86%29\Steam\Steamapps\common\BattleTech\Mods\BTHeraldryColorHelper\</OutputPath>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <OutputPath>$(BattleTechGameDir)\Mods\$(AssemblyName)\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="HarmonyX" Version="2.13.0">
@@ -30,29 +29,20 @@
     <PackageReference Include="Krafs.Publicizer" Version="2.3.0" />
     <Publicize Include="Assembly-CSharp" />
   </ItemGroup>
+  <ItemDefinitionGroup>
+    <Reference>
+      <Private>False</Private>
+    </Reference>
+  </ItemDefinitionGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="Assembly-CSharp" />
+    <Reference Include="Newtonsoft.Json" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Unity.TextMeshPro">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="Unity.TextMeshPro" />
+    <Reference Include="UnityEngine" />
+    <Reference Include="UnityEngine.CoreModule" />
+    <Reference Include="UnityEngine.TextRenderingModule" />
+    <Reference Include="UnityEngine.UI" />
   </ItemGroup>
 </Project>
