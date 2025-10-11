@@ -6,45 +6,48 @@ using UnityEngine.UI;
 
 namespace BTHeraldryColorHelper
 {
-    internal class HeraldryColorIDs
+    internal class HeraldryColorHelper
     {
+        /// <summary>
+        /// Shows the selected color name in the header of the color selector.
+        /// </summary>
         [HarmonyPatch(typeof(HorizontalScrollSelectorColor), "SetColor")]
-        public static class ShowSelectedColorNameInHeader
+        public static class HorizontalScrollSelectorColor_SetColor_HeaderName
         {
             [HarmonyPostfix]
             public static void Postfix(int index, ColorSwatch option, HorizontalScrollSelectorColor __instance)
             {
                 if (index != 3) return;
 
-                GameObject colorSwatch = __instance.colorTrackers[index].gameObject;
-                Transform uixPrfWidget_ColorPanel = colorSwatch?.transform.parent.parent.parent.parent.parent.parent;
-                Transform mainColorHeader = uixPrfWidget_ColorPanel?.Find("mainColorHeader");
+                var colorSwatch = __instance.colorTrackers[index].gameObject;
+                var colorPanel = colorSwatch?.transform.parent.parent.parent.parent.parent.parent;
 
+                var mainColorHeader = colorPanel?.Find("mainColorHeader");
                 if (mainColorHeader != null)
                 {
                     var textChild = mainColorHeader.Find("text");
                     if (textChild != null)
                     {
                         var headerText = textChild.GetComponent<LocalizableText>();
-                        if (headerText != null)
-                        {
-                            headerText.text = $"{headerText.text.Split(':')[0]}: {option.name}";
-                        }
+                        headerText?.text = $"{headerText.text.Split(':')[0]}: {option.name}";
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Shows the color name on each swatch in the color selector.
+        /// </summary>
         [HarmonyPatch(typeof(HorizontalScrollSelectorColor), "SetColor")]
-        public static class ShowColorNameOnEachSwatch
+        public static class HorizontalScrollSelectorColor_SetColor_SwatchNames
         {
             [HarmonyPostfix]
             public static void Postfix(int index, ColorSwatch option, HorizontalScrollSelectorColor __instance)
             {
                 if (!Main.Settings.ShowColorNameOnEachSwatch) return;
 
-                GameObject colorSwatch = __instance.colorTrackers[index].gameObject;
-                Text textComponent = colorSwatch?.GetComponentInChildren<Text>();
+                var colorSwatch = __instance.colorTrackers[index].gameObject;
+                var textComponent = colorSwatch?.GetComponentInChildren<Text>();
 
                 if (textComponent == null)
                 {
@@ -62,8 +65,8 @@ namespace BTHeraldryColorHelper
                     outline.effectColor = Color.black;
                     outline.effectDistance = new Vector2(1f, -1f);
 
-                    RectTransform rectTransform = textComponent.GetComponent<RectTransform>();
-                    RectTransform parentRect = colorSwatch.transform.parent.GetComponent<RectTransform>();
+                    var rectTransform = textComponent.GetComponent<RectTransform>();
+                    var parentRect = colorSwatch.transform.parent.GetComponent<RectTransform>();
                     rectTransform.anchorMin = Vector2.zero; rectTransform.anchorMax = Vector2.one;
                     rectTransform.offsetMin = Vector2.zero; rectTransform.offsetMax = Vector2.zero;
                     rectTransform.sizeDelta = parentRect.sizeDelta - new Vector2(5f, 5f);
@@ -72,7 +75,7 @@ namespace BTHeraldryColorHelper
                 string displayText;
                 if (option.name.StartsWith("Bright"))
                 {
-                    var parts = option.name.Split('_');
+                    string[] parts = option.name.Split('_');
                     string colorName = parts[0].Replace("Bright", "").Substring(0, 2);
                     displayText = colorName + parts[1];
                 }

@@ -39,8 +39,6 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp" />
     <Reference Include="Newtonsoft.Json" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Unity.TextMeshPro" />
     <Reference Include="UnityEngine" />
     <Reference Include="UnityEngine.CoreModule" />
