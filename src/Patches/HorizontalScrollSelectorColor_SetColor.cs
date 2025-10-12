@@ -17,18 +17,11 @@ namespace BTHeraldryColorHelper.Patches
         {
             if (index != 3) return;
 
-            var colorSwatch = __instance.colorTrackers[index].gameObject;
-            var colorPanel = colorSwatch?.transform.parent.parent.parent.parent.parent.parent;
-
-            var mainColorHeader = colorPanel?.Find("mainColorHeader");
+            var mainColorHeader = __instance.transform.Find("mainColorHeader");
             if (mainColorHeader != null)
             {
-                var textChild = mainColorHeader.Find("text");
-                if (textChild != null)
-                {
-                    var headerText = textChild.GetComponent<LocalizableText>();
-                    headerText?.text = $"{headerText.text.Split(':')[0]}: {option.name}";
-                }
+                var headerText = mainColorHeader.Find("text").GetComponent<LocalizableText>();
+                headerText?.text = $"{headerText.text.Split(':')[0]}: {option.name}";
             }
         }
     }
@@ -39,11 +32,12 @@ namespace BTHeraldryColorHelper.Patches
     [HarmonyPatch(typeof(HorizontalScrollSelectorColor), "SetColor")]
     public static class HorizontalScrollSelectorColor_SetColor_SwatchNames
     {
+        [HarmonyPrepare]
+        public static bool Prepare() => Main.Settings.ShowColorNameOnEachSwatch;
+
         [HarmonyPostfix]
         public static void Postfix(int index, ColorSwatch option, HorizontalScrollSelectorColor __instance)
         {
-            if (!Main.Settings.ShowColorNameOnEachSwatch) return;
-
             var colorSwatch = __instance.colorTrackers[index].gameObject;
             var textComponent = colorSwatch?.GetComponentInChildren<Text>();
 
