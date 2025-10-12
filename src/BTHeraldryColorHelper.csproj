@@ -46,6 +46,9 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp" />
     <Reference Include="Newtonsoft.Json" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="Unity.TextMeshPro" />
     <Reference Include="UnityEngine" />
     <Reference Include="UnityEngine.CoreModule" />
