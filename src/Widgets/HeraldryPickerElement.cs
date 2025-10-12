@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace BTHeraldryColorHelper.Widgets
+namespace HeraldryPicker.Widgets
 {
     /// <summary>
     /// UI element for a single heraldry entry
@@ -34,9 +34,7 @@ namespace BTHeraldryColorHelper.Widgets
             var tooltip = gameObject.GetComponent<HBSTooltip>() ?? gameObject.AddComponent<HBSTooltip>();
             var tooltipData = new HBSTooltipStateData();
 
-            string heraldryName = def.Description.Name;
             string tooltipText = heraldryName != null ? Regex.Replace(heraldryName, @"(\p{Ll})(\p{Lu})", "$1 $2") : "Unknown";
-            tooltipText += $"\n<size=80%>Id: {def.Description.Id}</size>";
             tooltipData.SetString(tooltipText);
             tooltip.SetDefaultStateData(tooltipData);
 

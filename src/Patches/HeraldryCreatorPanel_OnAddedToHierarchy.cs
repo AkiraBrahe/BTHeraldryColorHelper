@@ -1,10 +1,10 @@
 ﻿using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
-using BTHeraldryColorHelper.Widgets;
+using HeraldryPicker.Widgets;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BTHeraldryColorHelper.Patches
+namespace HeraldryPicker.Patches
 {
     /// <summary>
     /// Adds a Heraldry tab to the Crest selection panel in the Customize Company menu

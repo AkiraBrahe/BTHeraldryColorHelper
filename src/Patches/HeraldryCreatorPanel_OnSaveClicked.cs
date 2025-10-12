@@ -1,4 +1,4 @@
-namespace BTHeraldryColorHelper.Patches
+namespace HeraldryPicker.Patches
 {
     /// <summary>
     /// After clicking "Save", update the activeDef values to match the color and crest pickers.

@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace BTHeraldryColorHelper.Widgets
+namespace HeraldryPicker.Widgets
 {
     /// <summary>
     /// A widget for selecting a heraldry (faction paint scheme) from a scrollable list

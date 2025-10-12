@@ -4,7 +4,7 @@ using BattleTech.UI.TMProWrapper;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BTHeraldryColorHelper.Patches
+namespace HeraldryPicker.Patches
 {
     /// <summary>
     /// Shows the selected color name in the header of the color selector.
