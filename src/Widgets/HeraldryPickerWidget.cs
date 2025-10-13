@@ -135,5 +135,14 @@ namespace HeraldryPicker.Widgets
                 }
             }
         }
+
+        public void ResetSelection()
+        {
+            if (selectedElement != null)
+            {
+                selectedElement.SetSelected(false);
+                selectedElement = null;
+            }
+        }
     }
 }

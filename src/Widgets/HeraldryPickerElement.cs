@@ -32,11 +32,10 @@ namespace HeraldryPicker.Widgets
             }
 
             var tooltip = gameObject.GetComponent<HBSTooltip>() ?? gameObject.AddComponent<HBSTooltip>();
-            var tooltipData = new HBSTooltipStateData();
-
-            string tooltipText = heraldryName != null ? Regex.Replace(heraldryName, @"(\p{Ll})(\p{Lu})", "$1 $2") : "Unknown";
-            tooltipData.SetString(tooltipText);
-            tooltip.SetDefaultStateData(tooltipData);
+            string title = def.Description.Name != null ? Regex.Replace(def.Description.Name, @"(\p{Ll})(\p{Lu})", "$1 $2") : "Unknown";
+            string details = def.Description.Id != null ? $"Id: {def.Description.Id.Replace("heraldrydef_", "")}" : "";
+            var descriptionDef = new BaseDescriptionDef(def.Description.Id, title, details, null);
+            tooltip.SetDefaultStateData(TooltipUtilities.GetStateDataFromObject(descriptionDef));
 
             var button = gameObject.GetComponent<Button>() ?? gameObject.AddComponent<Button>();
             button.onClick.RemoveAllListeners();
