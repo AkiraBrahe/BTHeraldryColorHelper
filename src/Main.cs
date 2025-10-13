@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace BTHeraldryColorHelper
+namespace HeraldryPicker
 {
     public class Main
     {
@@ -15,7 +15,7 @@ namespace BTHeraldryColorHelper
         public static void Init(string settingsJSON)
         {
             Settings = JsonConvert.DeserializeObject<ModSettings>(settingsJSON) ?? new ModSettings();
-            harmony = new Harmony("com.github.AkiraBrahe.BTHeraldryColorHelper");
+            harmony = new Harmony("com.github.AkiraBrahe.HeraldryPicker");
             harmony.PatchAll();
         }
     }

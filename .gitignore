@@ -9,3 +9,6 @@ obj/
 # Compiled binaries
 *.dll
 *.pdb
+
+# External References
+/src/References

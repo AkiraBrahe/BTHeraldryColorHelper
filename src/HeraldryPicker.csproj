@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>Heraldry Color Helper</Title>
+    <Title>Heraldry Picker</Title>
     <Authors>Kierk</Authors>
     <Copyright>Copyright © 2025</Copyright>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
@@ -17,12 +17,29 @@
     <PublicizerRuntimeStrategies>Unsafe</PublicizerRuntimeStrategies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>$(BattleTechGameDir)\Mods\$(AssemblyName)\</OutputPath>
+    <OutputPath>..\</OutputPath>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <OutputPath>$(BattleTechGameDir)\Mods\$(AssemblyName)\</OutputPath>
+    <OutputPath>..\</OutputPath>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
+  <Target Name="CopyFilesToModFolder" AfterTargets="Build">
+    <PropertyGroup>
+      <ModFolder>$(BattleTechGameDir)\Mods\$(AssemblyName)\</ModFolder>
+    </PropertyGroup>
+    <ItemGroup>
+      <ModFiles Include="$(OutputPath)$(AssemblyName).dll" />
+      <ModFiles Include="$(ProjectDir)..\mod.json;$(ProjectDir)..\heraldry.png;$(ProjectDir)..\README.md" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ModFiles)" DestinationFolder="$(ModFolder)" SkipUnchangedFiles="true" />
+  </Target>
+  <ItemGroup>
+    <Compile Remove="References\**" />
+    <EmbeddedResource Remove="References\**" />
+    <None Remove="References\**" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HarmonyX" Version="2.13.0">
       <PrivateAssets>all</PrivateAssets>
@@ -39,6 +56,9 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp" />
     <Reference Include="Newtonsoft.Json" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="Unity.TextMeshPro" />
     <Reference Include="UnityEngine" />
     <Reference Include="UnityEngine.CoreModule" />
