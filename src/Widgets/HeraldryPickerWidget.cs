@@ -1,6 +1,7 @@
 using BattleTech;
 using BattleTech.Data;
 using BattleTech.UI;
+using HeraldryPicker.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace HeraldryPicker.Widgets
             this.dataManager = dataManager;
             this.heraldrySelectedCB = heraldrySelectedCB;
             this.initialSelectedHeraldryID = selectedHeraldryId;
+            HeraldryExporter.ExportHeraldries(dataManager);
             StartCoroutine(InitHeraldryList());
         }
 
@@ -60,6 +62,10 @@ namespace HeraldryPicker.Widgets
                     allHeraldryDefs.Add(def);
                 }
             }
+            allHeraldryDefs = [.. allHeraldryDefs
+                .OrderBy(def => FactionGroupManager.GetGroupForHeraldry(def.Description.Id.Replace("heraldrydef_", "")))
+                .ThenBy(def => def.Description.Name)
+                .ThenBy(def => def.Description.Id, new Utils.NaturalStringComparer())];
             loadingNotification?.SetActive(false);
             OnAllHeraldryLoaded();
             onSuccess?.Invoke();
@@ -144,11 +150,8 @@ namespace HeraldryPicker.Widgets
 
         public void ResetSelection()
         {
-            if (selectedElement != null)
-            {
-                selectedElement.SetSelected(false);
-                selectedElement = null;
-            }
+            selectedElement?.SetSelected(false);
+            selectedElement = null;
         }
     }
 }

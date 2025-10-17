@@ -6,67 +6,73 @@ using UnityEngine.UI;
 
 namespace HeraldryPicker.Patches
 {
+    #region Heraldry Tab
+
     /// <summary>
-    /// Adds a Heraldry tab to the Crest selection panel in the Customize Company menu
+    /// Adds a Heraldry tab to the Crest selector in the Customize Company menu
     /// and sets up the UI to toggle between the Crest and Heraldry selectors.
     /// </summary>
     [HarmonyPatch(typeof(HeraldryCreatorPanel), "OnAddedToHierarchy")]
-    public static class HeraldryCreatorPanel_OnAddedToHierarchy
+    public static class HeraldryCreatorPanel_OnAddedToHierarchy_HeraldryTab
     {
         [HarmonyPostfix]
         public static void Postfix(HeraldryCreatorPanel __instance)
         {
-            var crestSelector = __instance.transform.Find("Representation/uixPrfPanl_companyCrestSelector");
-            if (crestSelector == null) return;
-
-            // Create the Heraldry selector by cloning the Crest selector
-            if (__instance.transform.Find("Representation/uixPrfPanl_companyHeraldrySelector") == null)
+            var crestSelector = __instance.crestPicker.gameObject;
+            if (crestSelector.transform.parent.Find("uixPrfPanl_companyHeraldrySelector") == null)
             {
-                var heraldrySelectorGo = Object.Instantiate(crestSelector.gameObject, crestSelector.parent);
-                heraldrySelectorGo.name = "uixPrfPanl_companyHeraldrySelector";
-                heraldrySelectorGo.SetActive(false);
-                var heraldrySelector = heraldrySelectorGo.transform;
+                var heraldrySelector = Object.Instantiate(crestSelector.gameObject, crestSelector.transform.parent);
+                heraldrySelector.name = "uixPrfPanl_companyHeraldrySelector";
+                heraldrySelector.SetActive(false);
 
-                var loadingNotif = heraldrySelector.Find("Representation/loading-Notif")?.gameObject;
+                var loadingNotif = heraldrySelector.transform.Find("Representation/loading-Notif")?.gameObject;
                 if (loadingNotif != null)
                 {
                     var messageText = loadingNotif.transform.Find("loadElementLayout/messageText")?.GetComponent<LocalizableText>();
                     messageText?.text = "LOADING HERALDRIES";
                 }
 
-                var pickerWidget = heraldrySelectorGo.AddComponent<HeraldryPickerWidget>();
-                var listParent = heraldrySelector.Find("Representation/content-layout/crestsScrollview-list/Viewport/Content-crestItems") as RectTransform;
-                pickerWidget.listParent = listParent;
+                var pickerWidget = heraldrySelector.AddComponent<HeraldryPickerWidget>();
+                pickerWidget.listParent = heraldrySelector.transform.Find("Representation/content-layout/crestsScrollview-list/Viewport/Content-crestItems") as RectTransform;
                 pickerWidget.loadingNotification = loadingNotif;
 
-                // Set up the tab buttons to switch between Crest and Heraldry selectors
-                var crestTextObj = crestSelector.Find("Representation/title-layout/crests_text")?.GetComponent<LocalizableText>();
-                var heraldryTextObj = heraldrySelector.Find("Representation/title-layout/crests_text")?.GetComponent<LocalizableText>();
-                if (crestTextObj != null && heraldryTextObj != null)
+                SetupTabs(crestSelector, heraldrySelector, pickerWidget, __instance);
+            }
+        }
+
+        private static void SetupTabs(GameObject crestSelector, GameObject heraldrySelector, HeraldryPickerWidget pickerWidget, HeraldryCreatorPanel panelInstance)
+        {
+            var crestText = crestSelector.transform.Find("Representation/title-layout/crests_text")?.GetComponent<LocalizableText>();
+            var heraldryText = heraldrySelector.transform.Find("Representation/title-layout/crests_text")?.GetComponent<LocalizableText>();
+
+            if (crestText != null && heraldryText != null)
+            {
+                crestText.text = "Crests\n<size=50%>Heraldries</size>";
+                heraldryText.text = "Heraldries\n<size=50%>Crests</size>";
+
+                var crestTabButton = crestText.GetComponent<Button>() ?? crestText.gameObject.AddComponent<Button>();
+                crestTabButton.onClick.RemoveAllListeners();
+                crestTabButton.onClick.AddListener(() =>
                 {
-                    crestTextObj.text = "Crests\n<size=50%>Heraldries</size>"; heraldryTextObj.text = "Heraldries\n<size=50%>Crests</size>";
+                    crestSelector.SetActive(false);
+                    heraldrySelector.SetActive(true);
 
-                    var crestTabButton = crestTextObj.GetComponent<Button>() ?? crestTextObj.gameObject.AddComponent<Button>();
-                    var heraldryTabButton = heraldryTextObj.GetComponent<Button>() ?? heraldryTextObj.gameObject.AddComponent<Button>();
-
-                    crestTabButton.onClick.AddListener(() =>
+                    if (pickerWidget.listParent.childCount == 0)
                     {
-                        crestSelector.gameObject.SetActive(false);
-                        heraldrySelector.gameObject.SetActive(true);
+                        pickerWidget.SetData(panelInstance.dataManager, panelInstance.activeDef?.Description?.Id ?? string.Empty, null);
+                    }
+                });
 
-                        if (pickerWidget.listParent.childCount == 0)
-                        {
-                            pickerWidget.SetData(__instance.dataManager, __instance.activeDef?.Description?.Id ?? string.Empty, null);
-                        }
-                    });
-
-                    heraldryTabButton.onClick.AddListener(() =>
-                    {
-                        crestSelector.gameObject.SetActive(true);
-                        heraldrySelector.gameObject.SetActive(false);
-                    });
-                }
+                var heraldryTabButton = heraldryText.GetComponent<Button>() ?? heraldryText.gameObject.AddComponent<Button>();
+                heraldryTabButton.onClick.RemoveAllListeners();
+                heraldryTabButton.onClick.AddListener(() =>
+                {
+                    crestSelector.SetActive(true);
+                    heraldrySelector.SetActive(false);
+                });
             }
         }
     }
+
+    #endregion
 }

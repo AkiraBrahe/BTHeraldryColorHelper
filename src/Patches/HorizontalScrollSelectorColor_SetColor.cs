@@ -13,7 +13,7 @@ namespace HeraldryPicker.Patches
     public static class HorizontalScrollSelectorColor_SetColor_HeaderName
     {
         [HarmonyPostfix]
-        public static void Postfix(int index, ColorSwatch option, HorizontalScrollSelectorColor __instance)
+        public static void Postfix(HorizontalScrollSelectorColor __instance, int index, ColorSwatch option)
         {
             if (index != 3) return;
 
@@ -36,7 +36,7 @@ namespace HeraldryPicker.Patches
         public static bool Prepare() => Main.Settings.ShowColorNameOnEachSwatch;
 
         [HarmonyPostfix]
-        public static void Postfix(int index, ColorSwatch option, HorizontalScrollSelectorColor __instance)
+        public static void Postfix(HorizontalScrollSelectorColor __instance, int index, ColorSwatch option)
         {
             var colorSwatch = __instance.colorTrackers[index].gameObject;
             var textComponent = colorSwatch?.GetComponentInChildren<Text>();
