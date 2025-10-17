@@ -1,5 +1,6 @@
 using BattleTech;
 using BattleTech.Data;
+using BattleTech.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,7 +98,7 @@ namespace HeraldryPicker.Widgets
             return element;
         }
 
-        private void OnHeraldrySelected(HeraldryDef def)
+        private void OnHeraldrySelected(HeraldryDef def, bool assignCrest)
         {
             selectedElement?.SetSelected(false);
             selectedElement = allHeraldryElements.FirstOrDefault(e => e.heraldryDef == def);
@@ -106,7 +107,7 @@ namespace HeraldryPicker.Widgets
             selectedHeraldry = def;
             heraldrySelectedCB?.Invoke(def);
 
-            var panel = GetComponentInParent<BattleTech.UI.HeraldryCreatorPanel>();
+            var panel = GetComponentInParent<HeraldryCreatorPanel>();
             if (panel != null)
             {
                 if (panel.activeDef != null)
@@ -114,8 +115,13 @@ namespace HeraldryPicker.Widgets
                     panel.activeDef.primaryMechColorID = def.primaryMechColorID;
                     panel.activeDef.secondaryMechColorID = def.secondaryMechColorID;
                     panel.activeDef.tertiaryMechColorID = def.tertiaryMechColorID;
-                    panel.activeDef.textureLogoID = def.textureLogoID;
-                    panel.activeDef.Refresh();
+
+                    if (assignCrest)
+                    {
+                        panel.activeDef.textureLogoID = def.textureLogoID;
+                        panel.crestPicker.selectedCrest?.SetSelectedState(isSelected: false);
+                        panel.crestPicker.selectedCrest = null;
+                    }
                 }
 
                 panel.colorPicker?.SetData(def.primaryMechColorID, def.secondaryMechColorID, def.tertiaryMechColorID, new UnityAction(panel.ColorPickerRefresh));
